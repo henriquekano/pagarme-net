@@ -25,6 +25,8 @@
 // THE SOFTWARE.
 using PagarMe.Model;
 using System;
+using System.Text;
+using System.Security.Cryptography;
 
 namespace PagarMe
 {
@@ -100,6 +102,25 @@ namespace PagarMe
             Payables = new Base.ModelCollection<Payable>(this, "/payables");
             Transfers = new Base.ModelCollection<Transfer>(this, "/transfers");
         }
+
+		public bool ValidatePostback(string signature, string rawBody)
+		{
+			var isValid = false;
+			try
+			{
+				byte[] apiKeyBytes = Encoding.ASCII.GetBytes(_apiKey);
+				byte[] rawBodyBytes = Encoding.ASCII.GetBytes(rawBody);
+				string cleanedSignature = signature.Split('=')[1];
+				using (HMACSHA1 hmac = new HMACSHA1(apiKeyBytes))
+				{
+					byte[] rawBodyHashBytes = hmac.ComputeHash(rawBodyBytes);
+					String rawBodyHash = BitConverter.ToString(rawBodyHashBytes).Replace("-", String.Empty).ToLower();
+					isValid = rawBodyHash.Equals(cleanedSignature);
+				}
+			}catch{}
+
+			return isValid;	
+		} 
     }
 }
 
