@@ -53,16 +53,8 @@ namespace PagarMe.Tests
 			Type t = typeof(Transaction);
 			dynamic dTransaction = Activator.CreateInstance(t, null);
 			dTransaction.Amount = 10000;
-			CardHash card = new CardHash()
-			{
-				CardNumber = "4242424242424242",
-				CardHolderName = "Aardvark Silva",
-				CardExpirationDate = "0117",
-				CardCvv = "176"
 
-			};
-
-			dTransaction.CardHash = card.Generate();
+            dTransaction.CardHash = GetCardHash();
 			dTransaction.capture_method = "emv";
 			dTransaction.card_track_2 = "thequickbrownfox";
 			dTransaction.card_emv_data = "jumpsoverthelazydog";

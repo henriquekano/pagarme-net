@@ -42,7 +42,12 @@ namespace PagarMe
     {
         internal static string BuildQueryString(IEnumerable<Tuple<string, string>> query)
         {
-            return query.Select((t) => Uri.EscapeUriString(t.Item1) + "=" + Uri.EscapeUriString(t.Item2)).Aggregate((c, n) => c + "&" + n);
+            return query.Select((t) =>
+            {
+	            var parameterName = t.Item1 == null ? "null" : t.Item1;
+	            var parameterValue = t.Item2 == null ? "null" : t.Item2;
+	            return Uri.EscapeUriString(parameterName) + "=" + Uri.EscapeUriString(parameterValue);
+            }).Aggregate((accumulator, next) => accumulator + "&" + next);
         }
 
         private PagarMeService _service;

@@ -54,7 +54,7 @@ namespace PagarMe.Tests
 
 			creditcard.CardHolderName = "Jose da Silva";
 			creditcard.CardNumber = "5433229077370451";
-			creditcard.CardExpirationDate = "1016";
+            creditcard.CardExpirationDate = DateTime.Now.AddMonths(5).ToString("MMyy");
 			creditcard.CardCvv = "018";
 
 			return creditcard.Generate ();
